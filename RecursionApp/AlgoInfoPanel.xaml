@@ -1,0 +1,77 @@
+<UserControl x:Class="RecursionApp.AlgoInfoPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <!-- подпись над значением -->
+        <Style x:Key="SmallLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="Margin" Value="0,14,0,4"/>
+        </Style>
+
+        <!-- тонкая полоса прокрутки (только вертикальная) -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="#C9CED6" CornerRadius="4"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="#F8FAFC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+            CornerRadius="10" Padding="16,14,8,14">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,0,10,0">
+
+                <TextBlock Text="АЛГОРИТМ" Style="{StaticResource SmallLabel}" Margin="0,0,0,4"/>
+                <TextBlock x:Name="NameText" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
+
+                <TextBlock Text="СЛОЖНОСТЬ ПО ВРЕМЕНИ" Style="{StaticResource SmallLabel}"/>
+                <Border Background="{StaticResource AccentLightBrush}" CornerRadius="6" Padding="10,4"
+                        HorizontalAlignment="Left">
+                    <TextBlock x:Name="TimeText" FontSize="18" FontWeight="Bold" TextWrapping="Wrap"
+                               Foreground="{StaticResource AccentBrush}"/>
+                </Border>
+
+                <TextBlock Text="ПАМЯТЬ" Style="{StaticResource SmallLabel}"/>
+                <TextBlock x:Name="MemoryText" TextWrapping="Wrap"/>
+
+                <TextBlock Text="ОПИСАНИЕ" Style="{StaticResource SmallLabel}"/>
+                <TextBlock x:Name="DescriptionText" TextWrapping="Wrap" LineHeight="19"/>
+
+                <TextBlock Text="БАЗА РЕКУРСИИ" Style="{StaticResource SmallLabel}"/>
+                <Border Background="{StaticResource AccentLightBrush}" CornerRadius="6" Padding="10,7">
+                    <TextBlock x:Name="BaseText" FontFamily="Consolas" TextWrapping="Wrap"/>
+                </Border>
+
+                <TextBlock Text="ДЕКОМПОЗИЦИЯ" Style="{StaticResource SmallLabel}"/>
+                <Border Background="{StaticResource AccentLightBrush}" CornerRadius="6" Padding="10,7">
+                    <TextBlock x:Name="DecompText" FontFamily="Consolas" TextWrapping="Wrap"/>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

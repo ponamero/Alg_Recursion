@@ -1,0 +1,257 @@
+<Window x:Class="RecursionApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RecursionApp"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        Title="Лабораторная работа №2. Рекурсивные алгоритмы" Height="760" Width="1200"
+        Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI" FontSize="13">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- шапка -->
+        <Border Grid.Row="0" Background="{StaticResource AccentBrush}" Padding="22,14">
+            <StackPanel>
+                <TextBlock Text="Рекурсивные алгоритмы" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Лабораторная работа №2: рекурсия, фракталы, ханойские башни, дерево вызовов"
+                           Foreground="#EAF1FE" Margin="0,2,0,0"/>
+            </StackPanel>
+        </Border>
+
+    <TabControl Grid.Row="1" Margin="16,12,16,16">
+
+        <!-- ================= Рекурсивные алгоритмы ================= -->
+        <TabItem Header="Рекурсивные алгоритмы">
+            <Border Style="{StaticResource PageStyle}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,10,0">
+                        <WrapPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="Алгоритм" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox x:Name="AlgoCombo" SelectedIndex="0" Width="250" Margin="3"
+                                          SelectionChanged="AlgoCombo_SelectionChanged">
+                                    <ComboBoxItem Content="Быстрое возведение в степень"/>
+                                    <ComboBoxItem Content="Перевод числа в двоичную систему"/>
+                                    <ComboBoxItem Content="Генерация всех подмножеств"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock x:Name="AlgoInputLabel" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="AlgoInputBox" Width="110"/>
+                            </StackPanel>
+                            <StackPanel x:Name="AlgoField2Panel">
+                                <TextBlock x:Name="AlgoInputLabel2" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="AlgoInputBox2" Width="110"/>
+                            </StackPanel>
+                            <Button Content="Выполнить" VerticalAlignment="Bottom" Margin="10,3,3,3" Click="AlgoRun_Click"/>
+                        </WrapPanel>
+
+                        <TextBlock x:Name="AlgoResultText" FontSize="15" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" TextWrapping="Wrap" Margin="3,8,3,8"/>
+
+                        <TextBlock x:Name="AlgoChartTitle" Text="График" Style="{StaticResource Heading}" TextWrapping="Wrap"/>
+                        <lvc:CartesianChart x:Name="AlgoChart" Height="260"/>
+
+                        <TextBlock x:Name="AlgoVisualTitle" Text="Как работает" Style="{StaticResource Heading}" Margin="0,10,0,3"/>
+                        <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                            <ScrollViewer Height="190" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                <Canvas x:Name="AlgoVisualCanvas" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <TextBlock Text="Ход выполнения (все вызовы и возвраты)" Style="{StaticResource Heading}" Margin="0,10,0,3"/>
+                        <DataGrid x:Name="AlgoTraceGrid" Height="220" AutoGenerateColumns="False" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Шаг" Binding="{Binding Step}"/>
+                                <DataGridTextColumn Header="Действие" Binding="{Binding Action}" Width="*"/>
+                                <DataGridTextColumn Header="Глубина" Binding="{Binding Depth}"/>
+                                <DataGridTextColumn Header="Результат" Binding="{Binding Result}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <local:AlgoInfoPanel x:Name="AlgoInfo" Grid.Column="1"/>
+            </Grid>
+            </Border>
+        </TabItem>
+
+        <!-- ================= Задание 1: фрактал ================= -->
+        <TabItem Header="Задание 1. Фрактал">
+            <Border Style="{StaticResource PageStyle}">
+            <DockPanel Margin="10">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Глубина (от 0 до 5):" VerticalAlignment="Center"/>
+                    <TextBox x:Name="DepthBox" Text="3" Width="50"/>
+                    <Button Content="Нарисовать" Click="DrawFractal_Click"/>
+                    <TextBlock x:Name="FractalInfo" Margin="15,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Canvas x:Name="FractalCanvas" Width="486" Height="486"/>
+                </Border>
+            </DockPanel>
+            </Border>
+        </TabItem>
+
+        <!-- ================= Задание 2: ханойские башни ================= -->
+        <TabItem Header="Задание 2. Ханойские башни">
+            <Border Style="{StaticResource PageStyle}">
+            <DockPanel Margin="10">
+
+                <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                    <TextBlock Text="Колец (1-10):" VerticalAlignment="Center"/>
+                    <TextBox x:Name="RingsBox" Text="8" Width="40"/>
+                    <TextBlock Text="Метод:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <ComboBox x:Name="HanoiMethodCombo" SelectedIndex="0" Width="110" Margin="3"
+                              SelectionChanged="HanoiMethodCombo_SelectionChanged">
+                        <ComboBoxItem Content="Рекурсия"/>
+                        <ComboBoxItem Content="Стек"/>
+                    </ComboBox>
+                    <Button Style="{StaticResource GrayButton}" Content="Назад" Click="HanoiBack_Click"/>
+                    <Button Content="Вперёд" Click="HanoiForward_Click"/>
+                    <Button x:Name="AutoButton" Content="Авто" Width="70" Click="HanoiAuto_Click"/>
+                    <Button Style="{StaticResource GrayButton}" Content="Сброс" Click="HanoiReset_Click"/>
+                    <TextBlock Text="Задержка, мс:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Slider x:Name="SpeedSlider" Minimum="50" Maximum="1000" Value="300" Width="120"
+                            VerticalAlignment="Center" ValueChanged="SpeedSlider_ValueChanged"/>
+                </WrapPanel>
+
+                <!-- лог ходов справа -->
+                <DockPanel DockPanel.Dock="Right" Width="260" Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="Лог ходов:" FontWeight="Bold" Margin="0,0,0,3"/>
+                    <Button DockPanel.Dock="Bottom" Content="Сохранить лог в файл" Click="SaveLog_Click"/>
+                    <ListBox x:Name="LogBox" FontFamily="Consolas"/>
+                </DockPanel>
+
+                <StackPanel>
+                    <Canvas x:Name="HanoiCanvas" Width="600" Height="330" Background="#F8FAFC" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="HanoiInfo" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" Margin="0,10,0,0"/>
+                </StackPanel>
+            </DockPanel>
+            </Border>
+        </TabItem>
+
+        <!-- ================= Дерево вызовов ================= -->
+        <TabItem Header="Дерево вызовов">
+            <Border Style="{StaticResource PageStyle}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="Алгоритм" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="TreeCombo" SelectedIndex="0" Margin="3" SelectionChanged="TreeCombo_SelectionChanged">
+                            <ComboBoxItem Content="Быстрое возведение в степень"/>
+                            <ComboBoxItem Content="Перевод в двоичную систему"/>
+                            <ComboBoxItem Content="Генерация подмножеств"/>
+                            <ComboBoxItem Content="Ханойские башни"/>
+                        </ComboBox>
+                        <TextBlock x:Name="TreeHint" Style="{StaticResource FieldLabel}" Margin="3,8,0,2"/>
+                        <TextBox x:Name="TreeInputBox"/>
+                        <StackPanel x:Name="TreeField2Panel">
+                            <TextBlock x:Name="TreeHint2" Style="{StaticResource FieldLabel}" Margin="3,6,0,2"/>
+                            <TextBox x:Name="TreeInputBox2"/>
+                        </StackPanel>
+                        <Button Content="Построить дерево" Click="TreeBuild_Click"/>
+
+                        <WrapPanel Margin="0,5,0,0">
+                            <Button Style="{StaticResource GrayButton}" Content="В начало" Click="TreeStart_Click"/>
+                            <Button Style="{StaticResource GrayButton}" Content="Назад" Click="TreeBack_Click"/>
+                            <Button Content="Вперёд" Click="TreeForward_Click"/>
+                            <Button Style="{StaticResource GrayButton}" Content="В конец" Click="TreeEnd_Click"/>
+                        </WrapPanel>
+                        <TextBlock x:Name="TreeStepText" TextWrapping="Wrap" Margin="3,5,3,10" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"/>
+
+                        <TextBlock Text="Синий - вызов начался, зелёный - вызов закончился, серый - ещё не вызывался."
+                                   TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="3,0,3,10"/>
+                        <local:AlgoInfoPanel x:Name="TreeInfo"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Column="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <ScrollViewer x:Name="TreeScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Canvas x:Name="TreeCanvas"/>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+            </Border>
+        </TabItem>
+
+        <!-- ================= Замеры времени ================= -->
+        <TabItem Header="Замеры времени">
+            <Border Style="{StaticResource PageStyle}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="Алгоритм" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="BenchCombo" SelectedIndex="0" Margin="3" SelectionChanged="BenchCombo_SelectionChanged">
+                            <ComboBoxItem Content="Быстрое возведение в степень"/>
+                            <ComboBoxItem Content="Перевод в двоичную систему"/>
+                            <ComboBoxItem Content="Генерация подмножеств"/>
+                            <ComboBoxItem Content="Ханойские башни (рекурсия)"/>
+                            <ComboBoxItem Content="Ханойские башни (стек)"/>
+                        </ComboBox>
+
+                        <TextBlock x:Name="BenchNMeaning" Style="{StaticResource FieldLabel}" Margin="3,8,0,6"/>
+                        <TextBlock Text="N max" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="BenchNMaxBox"/>
+                        <TextBlock Text="Шаг" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="BenchStepBox"/>
+                        <TextBlock Text="Запусков на каждое n" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="BenchRunsBox" Text="5"/>
+                        <Button x:Name="BenchRunButton" Content="Запустить замер" Click="BenchRun_Click"/>
+
+                        <local:AlgoInfoPanel x:Name="BenchInfo" Margin="0,15,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="180"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="White">
+                        <Canvas x:Name="BenchChartCanvas" MinWidth="600" MinHeight="350"
+                                Background="Transparent" Cursor="SizeAll"
+                                SizeChanged="BenchChartCanvas_SizeChanged"
+                                MouseLeftButtonDown="BenchChartCanvas_MouseLeftButtonDown"
+                                MouseMove="BenchChartCanvas_MouseMove"
+                                MouseLeftButtonUp="BenchChartCanvas_MouseLeftButtonUp"/>
+                    </Border>
+
+                    <DataGrid x:Name="BenchGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,10,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="n" Binding="{Binding N}"/>
+                            <DataGridTextColumn Header="Среднее время, мс" Binding="{Binding AvgTimeMs, StringFormat=0.000000}"/>
+                            <DataGridTextColumn Header="Откл., мс" Binding="{Binding StdDevMs, StringFormat=0.000000}"/>
+                            <DataGridTextColumn Header="Запусков" Binding="{Binding Runs}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Grid>
+            </Border>
+        </TabItem>
+
+    </TabControl>
+    </Grid>
+</Window>
